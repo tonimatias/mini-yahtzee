@@ -64,5 +64,61 @@ export default StyleSheet.create({
   buttonText: {
     color:"#2B2B52",
     fontSize: 20
+  },
+  points : {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    marginLeft: 10,
+    marginRight: 15,
+    textAlign: 'center'
+  },
+  dicePoints: {
+    flexDirection: 'row',
+    width: 280,
+    alignContent: 'center'
+  },
+  home: {
+    fontSize: 17 ,
+    alignSelf: 'center'
+  },
+  homeOkButton: {
+    backgroundColor:'#39b2ee',
+    padding: 10,
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
+  playerTextInput: {
+    alignSelf: 'center',
+    width: 80,
+    margin:10,
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+  },
+  rulesTitle: {
+    fontSize: 18,
+    fontWeight:'bold',
+    alignSelf: 'center',
+    marginBottom: 5
+  },
+  rules: {
+    textAlign:'center',
+    marginRight: 7,
+    marginLeft: 7,
+    marginTop: 10
+  },
+  infoIcon: {
+    color: '#39b2ee',
+    alignSelf: 'center',
+    marginBottom: 20
+  },
+  glPLayer: {
+    fontSize: 20,
+    alignSelf: 'center',
+    margin: 10,
+  },
+  total: {
+    fontSize: 30,
+    margin: 15
   }
 })
