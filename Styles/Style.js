@@ -120,5 +120,15 @@ export default StyleSheet.create({
   total: {
     fontSize: 30,
     margin: 15
+  },
+  trophyIcon: {
+    color:'gold',
+    alignSelf: 'center'
+  },
+  topSeven:{
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 30,
+    padding: 15
   }
 })
