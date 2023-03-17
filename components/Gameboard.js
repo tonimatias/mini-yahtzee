@@ -26,6 +26,7 @@ export default Gameboard = ({ route }) => {
     const [dicePointsTotal, setDicePointsTotal] = useState(new Array(MAX_SPOT).fill(0));
     const [scores, setScores] = useState([]);
     const [totalScore, setTotalScore] = useState(0);
+    const [bonusPointsAdded, setBonusPointsAdded] = useState(false);
 
     const row = [];
     for (let i = 0; i < NBR_OF_DICES; i++) {
@@ -79,6 +80,7 @@ export default Gameboard = ({ route }) => {
 
     // This will be done when number of throws changes
     useEffect(() => {
+       
         if (nbrOfThrowsLeft === 0) {
             setStatus('Select your points');
         }
@@ -92,15 +94,16 @@ export default Gameboard = ({ route }) => {
 
     }, [nbrOfThrowsLeft]);
 
+    useEffect(() => {
+        if (scores >= 63 && !bonusPointsAdded) {
+          setScores(scores + BONUS_POINTS);
+          setBonusPointsAdded(true);
+        }
+      }, [scores, bonusPointsAdded]);
 
 
     function getDiceColor(i) {
-        // if (board.every((val, i, arr) => val === arr[0])) {
-        //     return "orange";
-        // }
-        // if {
         return selectedDices[i] ? "black" : "steelblue";
-        //}
     }
 
     function getDicePointsColor(i) {
@@ -159,35 +162,6 @@ export default Gameboard = ({ route }) => {
         setStatus("Select and throw dices again!");
     }
 
-    // const checkWinner = () => {
-    //     if (board.every((val, i, arr) => val === arr[0]) && nbrOfThrowsLeft > 0) {
-    //         setStatus('You won');
-    //     }
-    //     else if (board.every((val, i, arr) => val === arr[0]) && nbrOfThrowsLeft === 0) {
-    //         setStatus('You won, game over');
-    //         setSelectedDices(new Array(NBR_OF_DICES).fill(false))
-    //     }
-    //     else if (nbrOfThrowsLeft === 0){
-    //         setStatus('Game over');
-    //         setSelectedDices(new Array(NBR_OF_DICES).fill(false))
-    //     }
-
-    //     else {
-    //         setStatus('Keep on throwing!');
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     checkWinner();
-    //     if (nbrOfThrowsLeft == NBR_OF_THROWS) {
-    //         setStatus('Game has not started');
-    //     }
-    //     if (nbrOfThrowsLeft < 0){
-    //         setNbrOfThrowsLeft(NBR_OF_THROWS-1);
-    //     }
-    // },[nbrOfThrowsLeft]);
-
-
     const getScoreboardData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem(SCOREBOARD_KEY);
@@ -205,14 +179,12 @@ export default Gameboard = ({ route }) => {
         const month = new Date().getMonth() + 1;
         const year = new Date().getFullYear();
 
-        //Alert.alert(date + '-' + month + '-' + year);
-        // You can turn it in to your desired format
-        return date + '.' + month + '.' + year;//format: d-m-y;
+        return date + '.' + month + '.' + year;
     }
 
     const getTime = () => {
-        const hours = new Date().getHours(); //To get the Current Hours
-        const min = new Date().getMinutes(); //To get the Current Minutes¨
+        const hours = new Date().getHours();
+        const min = new Date().getMinutes(); 
 
         return hours + ':' + min;
     }
@@ -224,8 +196,12 @@ export default Gameboard = ({ route }) => {
             time: getTime(),
             points: totalScore
         }
+        
         try {
             const newScore = [...scores, playerPoints];
+            if (newScore >= 63) {
+                newScore + BONUS_POINTS; // En tiedä miten saadaan bonuspisteet siirrettyä scoreboardiin....
+            }
             const jsonValue = JSON.stringify(newScore);
             await AsyncStorage.setItem(SCOREBOARD_KEY, jsonValue);
             //checkBonusPoints();
@@ -233,6 +209,7 @@ export default Gameboard = ({ route }) => {
             console.log("Save error: " + error.message);
         }
     }
+
 
     const checkBonusPoints = () => {
         if (totalScore < 63) {
@@ -242,17 +219,6 @@ export default Gameboard = ({ route }) => {
             setTotalScore(totalScore + BONUS_POINTS);
         }
     }
-
-    // const resetGame = () => {
-    //     setSelectedDices(new Array(NBR_OF_DICES).fill(false));
-    //     setSelectedDicePoints(new Array(MAX_SPOT).fill(false));
-    //     setDiceSpots(new Array(NBR_OF_DICES).fill(0));
-    //     setDicePointsTotal(new Array(MAX_SPOT).fill(0));
-    //     setScores([]);
-    //     setTotalScore(0);
-    //     setNbrOfThrowsLeft(NBR_OF_THROWS);
-    //     setStatus('');
-    //   };
 
 
     return (
@@ -284,14 +250,9 @@ export default Gameboard = ({ route }) => {
                     <Text style={styles.total}>Total: {(totalScore + BONUS_POINTS)}</Text>
                     <Text>You got the bonus! 50 points added</Text>
                 </>}
-            {/* <Pressable onPress={resetGame} style={styles.button}>
-                <Text style={styles.buttonText}>Play Again</Text>
-            </Pressable> */}
+            
             <Text style={styles.glPLayer}>Player: {playerName}</Text>
             <Footer />
         </View>
     )
 }
-
-
-
